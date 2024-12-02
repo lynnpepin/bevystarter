@@ -1,5 +1,25 @@
 # BevyStarter
 
+> **TLDR:**
+>
+> ```sh
+> cargo run
+> ```
+> 
+> This is a template which starts with:
+> 
+> 1. A perf-optimized `Cargo.toml` and `rust-toolchain.toml`,
+> 
+> 2. The [`DefaultPlugins`](https://docs.rs/bevy/latest/bevy/struct.DefaultPlugins.html) PluginGroup,
+>
+> 3. Uses [`gilrs`](https://gitlab.com/gilrs-project/gilrs) for [gamepad input](https://bevy-cheatbook.github.io/input/gamepad.html), 
+> 
+> 4. And a 640x480 window with a simple setup system. (TODO)
+
+
+
+---
+
 This is a template of a blank Bevy project which [optimizes for performance](https://bevyengine.org/learn/quick-start/getting-started/setup/#compile-with-performance-optimizations), by enabling `opt-level = 1` optimizations for dev code and `opt-level = 3` for dependencies, including recommended release-mode and wasm optimizations.
 
 Get your first, slowest compile out of the way early with
@@ -7,7 +27,6 @@ Get your first, slowest compile out of the way early with
 ```sh
 cargo run
 ```
-
 and you're golden!
 
 This template does NOT enable [the fast compile optimizations](https://bevyengine.org/learn/quick-start/getting-started/setup/#enable-fast-compiles-optional). In order of most impactful, you might want to:
