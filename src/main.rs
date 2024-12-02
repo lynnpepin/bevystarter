@@ -16,6 +16,8 @@ use bevy::{
 
 mod grist;
 use grist::*;
+mod window_utils;
+use window_utils::*;
 
 fn main() {
   App::new()
@@ -37,7 +39,7 @@ fn main() {
               minimize: true,
               close: true
             },
-            visible: true,
+            visible: false,
             ..default()
           }),
           ..default()
@@ -52,7 +54,27 @@ fn main() {
         print_keyboard_event_system,
       ),
     )
+    .add_systems(
+      Update,
+      (
+        change_title,
+        toggle_theme,
+        toggle_cursor,
+        toggle_vsync,
+        toggle_window_controls,
+        cycle_cursor_icon,
+        switch_level,
+        make_visible,
+      )
+    )
     .run();
 }
 
-
+/*
+TODO:
+- Window stuff:
+    - https://github.com/bevyengine/bevy/blob/main/examples/window/window_settings.rs
+    - Move all of the window commands like "make_visible", etc. into a "window_utils.rs" mod
+- Genuary "particles"
+- WASM export, selfhost
+*/
