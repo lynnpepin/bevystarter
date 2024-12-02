@@ -17,8 +17,7 @@
 > 4. And a 640x480 window with a simple setup system. (TODO)
 
 
-
----
+## What is this?
 
 This is a template of a blank Bevy project which [optimizes for performance](https://bevyengine.org/learn/quick-start/getting-started/setup/#compile-with-performance-optimizations), by enabling `opt-level = 1` optimizations for dev code and `opt-level = 3` for dependencies, including recommended release-mode and wasm optimizations.
 
