@@ -5,13 +5,14 @@ use bevy::{
   core::FrameCount, diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin}, input::{gamepad::{
     GamepadAxisChangedEvent, GamepadButtonChangedEvent, GamepadButtonStateChangedEvent,
     GamepadConnectionEvent, GamepadEvent,
-  }, keyboard::KeyboardInput}, prelude::*, window::{CompositeAlphaMode, CursorGrabMode, PresentMode, SystemCursorIcon, WindowLevel, WindowTheme}, winit::cursor::CursorIcon
+  }, keyboard::KeyboardInput}, prelude::*, ui::update, window::{CompositeAlphaMode, CursorGrabMode, PresentMode, SystemCursorIcon, WindowLevel, WindowTheme}, winit::cursor::CursorIcon
 };
 
 mod print_input;
 use print_input::*;
 mod window_utils;
 use window_utils::*;
+use rand::{Rng};
 
 fn main() {
   App::new()
@@ -72,39 +73,81 @@ fn main() {
         make_visible,
       )
     )
-    .add_systems(Startup, setup)
-    .add_systems(Startup, action)
+    .add_systems(Startup, setup_particles)
+    .add_systems(Update, update_particles)
     .run();
 }
 
 
+#[derive(Component, Default)]
+struct ParticleDynamic {
+  velocity: Vec2,
+  acceleration: Vec2,
+  jerk: Vec2,
+  snap: Vec2,
+  crackle: Vec2,
+  pop: Vec2
+}
+
 // https://bevyengine.org/examples/2d-rendering/2d-shapes/
-fn setup(
+fn setup_particles(
   mut commands: Commands,
   mut meshes: ResMut<Assets<Mesh>>,
   mut materials: ResMut<Assets<ColorMaterial>>,
 ) {
   commands.spawn(Camera2d);
+  let mut rng = rand::thread_rng();
 
-  commands.spawn(
-    (
-      Mesh2d(
-        meshes.add(Circle::new(4.))
-      ),
-      MeshMaterial2d(
-        materials.add(
-          Color::hsv(0.0, 1.0, 1.0)
-        )
-      ),
-      Transform::from_xyz(8.0, 8.0, 0.0)
-    )
-  );
+  for _ in 0..1000 {
+    commands.spawn(
+      ( // Entity with a Mesh2d, MeshMaterial2d, Transform, and a ParticleDynamic
+        Mesh2d(
+          meshes.add(Circle::new(1.))
+        ),
+        MeshMaterial2d(
+          materials.add(
+            Color::hsv(
+              rng.gen_range(0.0..1.0),
+              1.0,
+              1.0
+            )
+          )
+        ),
+        Transform::from_xyz(
+          rng.gen_range(-256.0..256.0),
+          rng.gen_range(-256.0..256.0),
+          rng.gen_range(-256.0..256.0),
+        ),
+        ParticleDynamic {
+          velocity: Vec2 {
+            x: rng.gen_range(-16.0..16.0),
+            y: rng.gen_range(-16.0..16.0)
+          },
+          ..Default::default()
+        } // holy shit lol, this works?
+      )
+    );
+  }
 
 }
 
+// Every entity is modified using a function like this, with a Query,
+// where `Query<(&components, &go, &here)>` selects what entities are modified.
+fn update_particles(
+  time: Res<Time>,
+  mut query: Query<(&ParticleDynamic, &mut Transform)>
+) {
+  // Practically, you will start every Update system with a Query like this
+  for (dynamics, mut transform) in &mut query {
+    transform.translation.x += dynamics.velocity.x * time.delta_secs();
+    transform.translation.y += dynamics.velocity.y * time.delta_secs();
+  }
+}
+
+// todo: Add a function with a Query?
+
 /*
 TODO:
-- I really just need to follow this: https://bevy-cheatbook.github.io/tutorial/guide.html
 - Genuary "particles"
 - WASM export, selfhost
 - https://bevyengine.org/examples/3d-rendering/parallax-mapping/ holy shit-- this can end up looking very cool

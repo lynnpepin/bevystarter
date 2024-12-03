@@ -1,4 +1,4 @@
-# BevyStarter
+# BevyStarter -- My personal Bevy Starter template, which is completely not ready for anyone to use!
 
 > **TLDR:**
 >
