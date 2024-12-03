@@ -73,6 +73,7 @@ fn main() {
       )
     )
     .add_systems(Startup, setup)
+    .add_systems(Startup, action)
     .run();
 }
 
@@ -103,6 +104,8 @@ fn setup(
 
 /*
 TODO:
+- I really just need to follow this: https://bevy-cheatbook.github.io/tutorial/guide.html
 - Genuary "particles"
 - WASM export, selfhost
+- https://bevyengine.org/examples/3d-rendering/parallax-mapping/ holy shit-- this can end up looking very cool
 */
