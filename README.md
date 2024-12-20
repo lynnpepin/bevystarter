@@ -21,6 +21,8 @@
 
 This is a template of a blank Bevy project which [optimizes for performance](https://bevyengine.org/learn/quick-start/getting-started/setup/#compile-with-performance-optimizations), by enabling `opt-level = 1` optimizations for dev code and `opt-level = 3` for dependencies, including recommended release-mode and wasm optimizations.
 
+### First build
+
 Get your first, slowest compile out of the way early with
 
 ```sh
@@ -28,7 +30,30 @@ cargo run
 ```
 and you're golden!
 
-This template does NOT enable [the fast compile optimizations](https://bevyengine.org/learn/quick-start/getting-started/setup/#enable-fast-compiles-optional). In order of most impactful, you might want to:
+### WASM export
+
+We use `wasm-bindgen`. (More details [here](https://bevy-cheatbook.github.io/platforms/wasm/webpage.html).) Install it with 
+
+```sh
+cargo install wasm-bindgen-cli
+```
+
+and then build with
+
+```sh
+cargo build --release --target wasm32-unknown-unknown
+
+# change `bevy_starter` below as appropriate
+# you may need to `cargo update` if the below fails because of a schema error
+wasm-bindgen --no-typescript --target web \
+    --out-dir ./out/ \
+    --out-name "bevy_starter" \
+    ./target/wasm32-unknown-unknown/release/bevy_starter.wasm
+```
+
+### Optimizing compile times 
+
+Follow the  [the fast compile optimizations](https://bevyengine.org/learn/quick-start/getting-started/setup/#enable-fast-compiles-optional)
  
 
 1. **Enable dynamic linking**, bypassing the longest part of the Rust compiler:

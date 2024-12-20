@@ -148,7 +148,14 @@ fn update_particles(
 
 /*
 TODO:
-- Genuary "particles"
-- WASM export, selfhost
-- https://bevyengine.org/examples/3d-rendering/parallax-mapping/ holy shit-- this can end up looking very cool
+- [x] hello world
+- [x] print outputs to console
+- [x] render window
+- [x] render a particle
+- [x] Genuary "particles"
+- [x] WASM export
+- [ ] Set up good build -> self-host pipeline
+- [ ] New repo, clean this one up
+- [ ] Particle fluid flow
+- https://bevyengine.org/examples/3d-rendering/parallax-mapping/ holy bingle-- this can end up looking very cool
 */

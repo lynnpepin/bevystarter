@@ -59,3 +59,4 @@ pub fn print_keyboard_event_system(mut keyboard_input_events: EventReader<Keyboa
     info!("{:?}", event);
   }
 }
+
