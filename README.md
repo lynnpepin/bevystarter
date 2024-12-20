@@ -38,7 +38,7 @@ We use `wasm-bindgen`. (More details [here](https://bevy-cheatbook.github.io/pla
 cargo install wasm-bindgen-cli
 ```
 
-and then build with
+and then build with `build.sh`, which contains the following:
 
 ```sh
 cargo build --release --target wasm32-unknown-unknown

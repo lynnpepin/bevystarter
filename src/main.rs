@@ -51,7 +51,9 @@ fn main() {
         }),
       )
     )
-    .insert_resource(ClearColor(Color::NONE)) // for transparent window
+    .insert_resource(
+      ClearColor(Color::NONE) // for transparent window
+    ) 
     .add_systems(
       Update,
       (
@@ -98,33 +100,37 @@ fn setup_particles(
   commands.spawn(Camera2d);
   let mut rng = rand::thread_rng();
 
-  for _ in 0..1000 {
+  for _ in 0..2048 {
     commands.spawn(
       ( // Entity with a Mesh2d, MeshMaterial2d, Transform, and a ParticleDynamic
         Mesh2d(
-          meshes.add(Circle::new(1.))
+          meshes.add(
+            Circle::new(rng.gen_range(1.0..4.0))
+        )
         ),
         MeshMaterial2d(
           materials.add(
-            Color::hsv(
-              rng.gen_range(0.0..1.0),
-              1.0,
-              1.0
+            Color::hsva(
+              rng.gen_range(180.0..240.0),
+              rng.gen_range(0.1..0.3),
+              rng.gen_range(0.8..1.0),
+              rng.gen_range(0.0..1.0_f32).powf(2.0),
             )
           )
         ),
+        // Random position in the [-256, 256] space
         Transform::from_xyz(
-          rng.gen_range(-256.0..256.0),
-          rng.gen_range(-256.0..256.0),
-          rng.gen_range(-256.0..256.0),
+          rng.gen_range(-512.0..512.0),
+          rng.gen_range(-512.0..512.0),
+          rng.gen_range(-512.0..512.0),
         ),
         ParticleDynamic {
           velocity: Vec2 {
-            x: rng.gen_range(-16.0..16.0),
-            y: rng.gen_range(-16.0..16.0)
+            x: rng.gen_range(-8.0..48.0),
+            y: rng.gen_range(-64.0..-32.0)
           },
           ..Default::default()
-        } // holy shit lol, this works?
+        }
       )
     );
   }
@@ -139,8 +145,8 @@ fn update_particles(
 ) {
   // Practically, you will start every Update system with a Query like this
   for (dynamics, mut transform) in &mut query {
-    transform.translation.x += dynamics.velocity.x * time.delta_secs();
-    transform.translation.y += dynamics.velocity.y * time.delta_secs();
+    transform.translation.x = (transform.translation.x + dynamics.velocity.x * time.delta_secs() + 512.0).rem_euclid(1024.0) - 512.0;
+    transform.translation.y = (transform.translation.y + dynamics.velocity.y * time.delta_secs() + 512.0).rem_euclid(1024.0) - 512.0;
   }
 }
 
@@ -154,8 +160,10 @@ TODO:
 - [x] render a particle
 - [x] Genuary "particles"
 - [x] WASM export
-- [ ] Set up good build -> self-host pipeline
 - [ ] New repo, clean this one up
+- [ ] Genuary:
+  - [ ] The `index.html` should contain the wasm in a 'screen'
+  - [ ] Set up good build -> self-host pipeline
 - [ ] Particle fluid flow
 - https://bevyengine.org/examples/3d-rendering/parallax-mapping/ holy bingle-- this can end up looking very cool
 */
