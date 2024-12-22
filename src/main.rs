@@ -105,8 +105,12 @@ fn setup_particles(
       ( // Entity with a Mesh2d, MeshMaterial2d, Transform, and a ParticleDynamic
         Mesh2d(
           meshes.add(
-            Circle::new(rng.gen_range(1.0..4.0))
-        )
+            //Circle::new(rng.gen_range(1.0..4.0))
+            RegularPolygon::new(
+              rng.gen_range(1.0..3.0_f32).powf(2.),
+              6
+            )
+          )
         ),
         MeshMaterial2d(
           materials.add(
@@ -145,8 +149,22 @@ fn update_particles(
 ) {
   // Practically, you will start every Update system with a Query like this
   for (dynamics, mut transform) in &mut query {
-    transform.translation.x = (transform.translation.x + dynamics.velocity.x * time.delta_secs() + 512.0).rem_euclid(1024.0) - 512.0;
-    transform.translation.y = (transform.translation.y + dynamics.velocity.y * time.delta_secs() + 512.0).rem_euclid(1024.0) - 512.0;
+    transform.translation.x = (
+      // Move forward 
+      transform.translation.x + dynamics.velocity.x * time.delta_secs() 
+
+      // sin for wobble, using velocity values for the random wobble
+      //(time                * constant                  + phase                   ).sin() * amplitude
+      + (time.elapsed_secs() * dynamics.velocity.x/8.  + dynamics.velocity.x*4.0 ).sin() * 0.25
+
+      // Keep it within [-512, 512]
+      + 512.0
+    ).rem_euclid(1024.0) - 512.0;
+    transform.translation.y = (
+      transform.translation.y + dynamics.velocity.y * time.delta_secs() + 512.0
+    ).rem_euclid(1024.0) - 512.0;
+
+    transform.rotate_z(-1.0 * time.delta_secs());
   }
 }
 
